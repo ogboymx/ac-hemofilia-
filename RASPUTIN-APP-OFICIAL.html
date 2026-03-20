@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RASPUTIN APP</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0A0A0A; color: white; min-height: 100vh; }
+        .container { max-width: 500px; margin: 0 auto; padding: 20px; }
+        .login-screen { text-align: center; padding-top: 50px; }
+        .logo { width: 100px; height: 100px; border-radius: 50%; border: 3px solid #D4AF37; margin-bottom: 15px; }
+        h1 { color: #D4AF37; font-size: 2.2rem; }
+        .subtitle { color: #888; font-size: 0.85rem; text-transform: uppercase; }
+        .user-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 40px; }
+        .user-btn { background: #1A1A1A; border: 2px solid transparent; border-radius: 16px; padding: 30px 20px; color: white; cursor: pointer; }
+        .user-btn:hover { border-color: #D4AF37; }
+        .user-btn i { font-size: 2.5rem; color: #D4AF37; margin-bottom: 15px; display: block; }
+        .user-btn span { font-size: 1.2rem; font-weight: 600; }
+        .pin-section { display: none; margin-top: 40px; }
+        .pin-section.active { display: block; }
+        .pin-display { display: flex; justify-content: center; gap: 15px; margin: 25px 0; }
+        .pin-dot { width: 18px; height: 18px; border-radius: 50%; border: 2px solid #D4AF37; }
+        .pin-dot.filled { background: #D4AF37; }
+        .keypad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; max-width: 280px; margin: 0 auto; }
+        .key { aspect-ratio: 1; background: #1A1A1A; border: none; border-radius: 12px; color: white; font-size: 1.6rem; cursor: pointer; }
+        .key.enter { background: #D4AF37; color: black; }
+        .key.clear { color: #ff4444; }
+        .app-screen { display: none; padding: 20px; }
+        .app-screen.active { display: block; }
+        .header { display: flex; justify-content: space-between; align-items: center; padding: 20px; background: #1A1A1A; position: sticky; top: 0; z-index: 100; }
+        .header h2 { color: #D4AF37; }
+        .logout { background: transparent; border: none; color: #ff4444; font-size: 1.3rem; }
+        .dashboard-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
+        .stat-card { background: #1A1A1A; border-radius: 16px; padding: 20px; text-align: center; }
+        .stat-icon { font-size: 1.8rem; color: #D4AF37; margin-bottom: 10px; }
+        .stat-value { color: #D4AF37; font-size: 1.6rem; font-weight: bold; }
+        .stat-label { color: #888; font-size: 0.8rem; }
+        .btn-primary { width: 100%; background: #D4AF37; border: none; border-radius: 12px; padding: 18px; color: #0A0A0A; font-size: 1.1rem; font-weight: 700; cursor: pointer; margin-bottom: 12px; }
+        .btn-secondary { width: 100%; background: #1A1A1A; border: 1px solid #333; border-radius: 12px; padding: 18px; color: white; font-size: 1.1rem; cursor: pointer; margin-bottom: 12px; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; color: #888; margin-bottom: 8px; font-size: 0.9rem; }
+        select, input { width: 100%; padding: 16px; background: #1A1A1A; border: 1px solid #333; border-radius: 12px; color: white; font-size: 1rem; }
+        .cliente-info { background: rgba(212, 175, 55, 0.1); border: 1px solid #D4AF37; border-radius: 12px; padding: 20px; margin-bottom: 20px; }
+        .cliente-info-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .cliente-info-row:last-child { border-bottom: none; }
+        .cliente-info-label { color: #888; }
+        .cliente-info-value { color: #D4AF37; font-weight: 600; }
+        .producto-item { background: #1A1A1A; border-radius: 12px; padding: 16px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+        .producto-item.clickable { cursor: pointer; }
+        .producto-nombre { font-weight: 600; }
+        .producto-tipo { color: #888; font-size: 0.8rem; }
+        .producto-precio { color: #D4AF37; font-weight: bold; font-size: 1.1rem; }
+        .stock-bajo { color: #ff4444; font-size: 0.75rem; }
+        .stock-ok { color: #4CAF50; font-size: 0.75rem; }
+        .cantidad-control { display: flex; align-items: center; gap: 10px; }
+        .btn-cantidad { width: 30px; height: 30px; border-radius: 6px; border: none; background: #333; color: white; cursor: pointer; }
+        .btn-cantidad.mas { background: #D4AF37; color: black; }
+        .cantidad-valor { font-weight: bold; min-width: 25px; text-align: center; }
+        .btn-eliminar { background: rgba(255, 68, 68, 0.2); border: none; color: #ff4444; padding: 8px 12px; border-radius: 6px; cursor: pointer; margin-left: 10px; }
+        .total-section { background: #1A1A1A; border-radius: 16px; padding: 20px; margin: 20px 0; }
+        .total-row { display: flex; justify-content: space-between; padding: 8px 0; color: #888; }
+        .total-row.total { color: #D4AF37; font-size: 1.3rem; font-weight: bold; border-top: 1px solid #333; margin-top: 10px; padding-top: 15px; }
+        .tabs { display: flex; gap: 10px; margin-bottom: 15px; overflow-x: auto; }
+        .tab { padding: 10px 20px; background: #1A1A1A; border: 1px solid #333; border-radius: 20px; color: #888; font-size: 0.85rem; cursor: pointer; white-space: nowrap; }
+        .tab.active { background: #D4AF37; color: #0A0A0A; font-weight: 600; }
+        .hidden { display: none !important; }
+        .toast { position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%); background: #1A1A1A; border-left: 4px solid #D4AF37; padding: 16px 24px; border-radius: 10px; z-index: 1000; }
+        .toast.error { border-left-color: #ff4444; }
+        .toast.success { border-left-color: #4CAF50; }
+    </style>
+</head>
+<body>
+    <div id="loginScreen" class="login-screen">
+        <div class="container">
+            <img src="https://raw.githubusercontent.com/ogboymx/kimi-agente/main/old_rasputin/imagenes_originales/NCBC-Old-Rasputin-12oz.jpg" alt="Rasputin" class="logo">
+            <h1>RASPUTIN</h1>
+            <p class="subtitle">Imperial Distribution</p>
+            
+            <div id="userSelection">
+                <div class="user-grid">
+                    <button class="user-btn" onclick="selectUser('Mario', '1234')">
+                        <i class="fas fa-crown"></i>
+                        <span>Mario</span>
+                    </button>
+                    <button class="user-btn" onclick="selectUser('German', '5678')">
+                        <i class="fas fa-user"></i>
+                        <span>German</span>
+                    </button>
+                </div>
+            </div>
+            
+            <div id="pinSection" class="pin-section">
+                <p style="color: #888; margin-bottom: 20px;">Ingresa tu PIN</p>
+                <div class="pin-display">
+                    <span class="pin-dot" id="dot1"></span>
+                    <span class="pin-dot" id="dot2"></span>
+                    <span class="pin-dot" id="dot3"></span>
+                    <span class="pin-dot" id="dot4"></span>
+                </div>
+                
+                <div class="keypad">
+                    <button class="key" onclick="enterPin(1)">1</button>
+                    <button class="key" onclick="enterPin(2)">2</button>
+                    <button class="key" onclick="enterPin(3)">3</button>
+                    <button class="key" onclick="enterPin(4)">4</button>
+                    <button class="key" onclick="enterPin(5)">5</button>
+                    <button class="key" onclick="enterPin(6)">6</button>
+                    <button class="key" onclick="enterPin(7)">7</button>
+                    <button class="key" onclick="enterPin(8)">8</button>
+                    <button class="key" onclick="enterPin(9)">9</button>
+                    <button class="key clear" onclick="clearPin()"><i class="fas fa-times"></i></button>
+                    <button class="key" onclick="enterPin(0)">0</button>
+                    <button class="key enter" onclick="checkPin()"><i class="fas fa-arrow-right"></i></button>
+                </div>
+                
+                <button onclick="backToUsers()" style="background: transparent; border: none; color: #888; margin-top: 25px; cursor: pointer;">
+                    <i class="fas fa-arrow-left"></i> Cambiar usuario
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="appScreen" class="app-screen">
+        <div class="header">
+            <h2><i class="fas fa-beer" style="color: #D4AF37; margin-right: 10px;"></i>Dashboard</h2>
+            <button class="logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i></button>
+        </div>
+        
+        <div class="container">
+            <div class="dashboard-grid">
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-dollar-sign"></i></div>
+                    <div class="stat-value" id="ventasHoy">$12,450</div>
+                    <div class="stat-label">Ventas Hoy</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-shopping-bag"></i></div>
+                    <div class="stat-value">8</div>
+                    <div class="stat-label">Pedidos</div>
+                </div>
+            </div>
+            
+            <button class="btn-primary" onclick="showScreen('nuevoPedido')"><i class="fas fa-plus"></i> Nuevo Pedido</button>
+            <button class="btn-secondary" onclick="showScreen('inventario')"><i class="fas fa-boxes"></i> Inventario</button>
+            <button class="btn-secondary" onclick="showScreen('clientes')"><i class="fas fa-users"></i> Clientes</button>
+        </div>
+    </div>
+
+    <div id="nuevoPedido" class="app-screen">
+        <div class="header">
+            <button onclick="showScreen('appScreen')" style="background: transparent; border: none; color: white; font-size: 1.2rem;"><i class="fas fa-arrow-left"></i></button>
+            <h2>Nuevo Pedido</h2>
+            <div></div>
+        </div>
+        
+        <div class="container">
+            <div id="paso1">
+                <div class="form-group">
+                    <label>🍺 Cliente</label>
+                    <select id="selectCliente" onchange="selectCliente(this.value)">
+                        <option value="">-- Selecciona cliente --</option>
+                    </select>
+                </div>
+                
+                <div id="clienteInfo" class="cliente-info hidden">
+                    <div class="cliente-info-row">
+                        <span class="cliente-info-label">Descuento:</span>
+                        <span class="cliente-info-value" id="clienteDescuento">-</span>
+                    </div>
+                    <div class="cliente-info-row">
+                        <span class="cliente-info-label">Teléfono:</span>
+                        <span class="cliente-info-value" id="clienteTelefono">-</span>
+                    </div>
+                    <div class="cliente-info-row">
+                        <span class="cliente-info-label">Crédito:</span>
+                        <span class="cliente-info-value" id="clienteCredito">-</span>
+                    </div>
+                </div>
+                
+                <button class="btn-primary" id="btnContinuar" onclick="goToPaso2()" disabled>Continuar <i class="fas fa-arrow-right"></i></button>
+            </div>
+            
+            <div id="paso2" class="hidden">
+                <p style="color: #888; margin-bottom: 15px;">📦 Catálogo de Productos</p>
+                <div id="listaProductos"></div>
+                
+                <p style="color: #888; margin: 20px 0 15px;">🛒 Productos Agregados</p>
+                <div id="productosSeleccionados"></div>
+                
+                <div class="total-section">
+                    <div class="total-row">
+                        <span>Subtotal:</span>
+                        <span id="subtotal">$0.00</span>
+                    </div>
+                    <div class="total-row">
+                        <span>Descuento:</span>
+                        <span id="descuentoValor">-$0.00</span>
+                    </div>
+                    <div class="total-row total">
+                        <span>TOTAL:</span>
+                        <span id="totalFinal">$0.00</span>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>💳 Forma de Pago</label>
+                    <select id="formaPago">
+                        <option value="EFECTIVO">💵 Efectivo</option>
+                        <option value="TARJETA">💳 Tarjeta</option>
+                        <option value="TRANSFERENCIA">🏦 Transferencia</option>
+                        <option value="LINK">🔗 Link de Pago</option>
+                        <option value="CREDITO_7">📅 Crédito 7 días</option>
+                        <option value="CREDITO_15">📅 Crédito 15 días</option>
+                        <option value="CREDITO_30">📅 Crédito 30 días</option>
+                    </select>
+                </div>
+                
+                <button class="btn-primary" onclick="guardarPedido()"><i class="fas fa-save"></i> Guardar Pedido</button>
+                <button class="btn-secondary" onclick="shareWhatsApp()"><i class="fab fa-whatsapp"></i> Compartir WhatsApp</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="inventario" class="app-screen">
+        <div class="header">
+            <button onclick="showScreen('appScreen')" style="background: transparent; border: none; color: white; font-size: 1.2rem;"><i class="fas fa-arrow-left"></i></button>
+            <h2>Inventario</h2>
+            <div></div>
+        </div>
+        
+        <div class="container">
+            <div class="tabs">
+                <div class="tab active" onclick="renderInventario('todos')">Todos</div>
+                <div class="tab" onclick="renderInventario('bajo')">Stock Bajo</div>
+                <div class="tab" onclick="renderInventario('ncbc')">NCBC</div>
+                <div class="tab" onclick="renderInventario('knee')">Knee Deep</div>
+            </div>
+            
+            <div id="listaInventario"></div>
+        </div>
+    </div>
+
+    <div id="clientes" class="app-screen">
+        <div class="header">
+            <button onclick="showScreen('appScreen')" style="background: transparent; border: none; color: white; font-size: 1.2rem;"><i class="fas fa-arrow-left"></i></button>
+            <h2>Clientes</h2>
+            <div></div>
+        </div>
+        
+        <div class="container">
+            <div class="form-group">
+                <input type="text" id="buscarCliente" placeholder="🔍 Buscar cliente..." oninput="filtrarClientes(this.value)">
+            </div>
+            
+            <div id="listaClientes"></div>
+        </div>
+    </div>
+
+    <script>
+        const CLIENTES = [
+            { id: 1, nombre: 'LA ESPUMA', descuento: 0.12, telefono: '5512345678', credito: 7, tipo: 'Minorista' },
+            { id: 2, nombre: 'MONASTERIO', descuento: 0.15, telefono: '5523456789', credito: 15, tipo: 'Minorista' },
+            { id: 3, nombre: 'BEER BOSS', descuento: 0.15, telefono: '5534567890', credito: 15, tipo: 'Minorista' },
+            { id: 4, nombre: 'BEER MINDS', descuento: 0.15, telefono: '5545678901', credito: 15, tipo: 'Minorista' },
+            { id: 5, nombre: 'LA TREGUA', descuento: 0.15, telefono: '5556789012', credito: 15, tipo: 'Minorista' },
+            { id: 6, nombre: 'AMAZON', descuento: 0.10, telefono: '5567890123', credito: 0, tipo: 'Minorista' },
+            { id: 7, nombre: 'EMPACK', descuento: 0.15, telefono: '5578901234', credito: 15, tipo: 'Minorista' },
+            { id: 8, nombre: 'FRITZ', descuento: 0.15, telefono: '5589012345', credito: 15, tipo: 'Minorista' },
+            { id: 9, nombre: 'BEER BANK', descuento: 0.15, telefono: '5590123456', credito: 15, tipo: 'Minorista' },
+            { id: 10, nombre: 'CIRCO VOLADOR', descuento: 0.18, telefono: '5511112222', credito: 15, tipo: 'Bar' },
+            { id: 11, nombre: 'LA VACA', descuento: 0.15, telefono: '5522223333', credito: 15, tipo: 'Restaurant' },
+            { id: 12, nombre: 'CRAFT GALAXY', descuento: 0.15, telefono: '5533334444', credito: 15, tipo: 'Minorista' },
+            { id: 13, nombre: 'VENTURA B', descuento: 0.20, telefono: '5544445555', credito: 30, tipo: 'Distribuidor' },
+            { id: 14, nombre: 'PACHECO BEER', descuento: 0.15, telefono: '5555556666', credito: 15, tipo: 'Minorista' },
+            { id: 15, nombre: 'FELIPE SAN ANGEL', descuento: 0.15, telefono: '5566667777', credito: 15, tipo: 'Minorista' },
+            { id: 16, nombre: 'REICH', descuento: 0.18, telefono: '5577778888', credito: 15, tipo: 'Distribuidor' },
+            { id: 17, nombre: 'VENTURA BURGER', descuento: 0.15, telefono: '5588889999', credito: 15, tipo: 'Restaurant' },
+            { id: 18, nombre: 'PACHECO', descuento: 0.15, telefono: '5599990000', credito: 15, tipo: 'Minorista' },
+            { id: 19, nombre: 'DOBLE MALTA', descuento: 0.12, telefono: '5511223344', credito: 7, tipo: 'Minorista' },
+            { id: 20, nombre: 'BENJAMINOS', descuento: 0.15, telefono: '5522334455', credito: 15, tipo: 'Minorista' },
+            { id: 21, nombre: 'PUEBLA', descuento: 0.15, telefono: '5533445566', credito: 15, tipo: 'Distribuidor' },
+            { id: 22, nombre: 'TRAPPIST', descuento: 0.15, telefono: '5544556677', credito: 15, tipo: 'Minorista' },
+            { id: 23, nombre: 'YIRETO', descuento: 0.15, telefono: '5555667788', credito: 15, tipo: 'Minorista' },
+            { id: 24, nombre: 'CALACAS', descuento: 0.15, telefono: '5566778899', credito: 15, tipo: 'Bar' },
+            { id: 25, nombre: 'PLAZA GRILLE', descuento: 0.18, telefono: '5577889900', credito: 15, tipo: 'Restaurant' },
+            { id: 26, nombre: 'TARIMA', descuento: 0.15, telefono: '5588990011', credito: 15, tipo: 'Minorista' }
+        ];
+
+        const PRODUCTOS = [
+            { id: 1, nombre: 'OLD RASPUTIN', tipo: 'Imperial Stout', presentacion: 'Lata 473ml', precio: 106, stock: 50, cerveceria: 'NCBC' },
+            { id: 2, nombre: 'OLD RASPUTIN', tipo: 'Imperial Stout', presentacion: 'Botella 355ml', precio: 85, stock: 40, cerveceria: 'NCBC' },
+            { id: 3, nombre: 'BROTHER THELONIOUS', tipo: 'Belgian Dark Strong', presentacion: 'Botella 355ml', precio: 93, stock: 35, cerveceria: 'NCBC' },
+            { id: 4, nombre: 'OLD STOCK 2025', tipo: 'Old Ale', presentacion: 'Botella 355ml', precio: 98, stock: 25, cerveceria: 'NCBC' },
+            { id: 5, nombre: 'RED SEAL ALE', tipo: 'Amber Ale', presentacion: 'Botella 355ml', precio: 70, stock: 45, cerveceria: 'NCBC' },
+            { id: 6, nombre: 'LE MERLE', tipo: 'Saison Belgian Farmhouse', presentacion: 'Botella 355ml', precio: 80, stock: 30, cerveceria: 'NCBC' },
+            { id: 7, nombre: 'PRANQSTER', tipo: 'Belgian Golden Ale', presentacion: 'Botella 355ml', precio: 80, stock: 15, cerveceria: 'NCBC' },
+            { id: 8, nombre: 'FOGGY DAY IPA', tipo: 'IPA', presentacion: 'Botella 355ml', precio: 70, stock: 60, cerveceria: 'NCBC' },
+            { id: 9, nombre: 'ACME', tipo: 'Pale Ale', presentacion: 'Botella 355ml', precio: 49, stock: 55, cerveceria: 'NCBC' },
+            { id: 10, nombre: 'SCRIMSHAW', tipo: 'Pilsner', presentacion: 'Botella 355ml', precio: 49, stock: 40, cerveceria: 'NCBC' },
+            { id: 11, nombre: 'CHERRY TART', tipo: 'Berliner Weisse', presentacion: 'Botella 355ml', precio: 75, stock: 20, cerveceria: 'NCBC' },
+            { id: 12, nombre: 'SIMTRA', tipo: 'Triple IPA', presentacion: 'Botella 355ml', precio: 185, stock: 30, cerveceria: 'KNEE DEEP' },
+            { id: 13, nombre: 'SLOOOWMO', tipo: 'IPA', presentacion: 'Botella 355ml', precio: 70, stock: 45, cerveceria: 'KNEE DEEP' },
+            { id: 14, nombre: 'HOPTOLOGIST', tipo: 'Double IPA', presentacion: 'Botella 355ml', precio: 138, stock: 35, cerveceria: 'KNEE DEEP' },
+            { id: 15, nombre: 'TAHOE DEEP', tipo: 'Imperial IPA', presentacion: 'Botella 355ml', precio: 138, stock: 25, cerveceria: 'KNEE DEEP' },
+            { id: 16, nombre: 'BREAKING BUD', tipo: 'IPA', presentacion: 'Botella 355ml', precio: 138, stock: 40, cerveceria: 'KNEE DEEP' },
+            { id: 17, nombre: 'POCKET ROCKET', tipo: 'IPA', presentacion: 'Botella 355ml', precio: 80, stock: 50, cerveceria: 'KNEE DEEP' },
+            { id: 18, nombre: 'FOLSOME HAZE', tipo: 'Hazy IPA', presentacion: 'Botella 355ml', precio: 98, stock: 55, cerveceria: 'KNEE DEEP' },
+            { id: 19, nombre: 'DEEP CLARITY', tipo: 'West Coast IPA', presentacion: 'Botella 355ml', precio: 70, stock: 60, cerveceria: 'KNEE DEEP' },
+            { id: 20, nombre: 'DEEP ISLAND', tipo: 'Tropical IPA', presentacion: 'Botella 355ml', precio: 70, stock: 45, cerveceria: 'KNEE DEEP' }
+        ];
+
+        let currentUser = null, currentPin = '', expectedPin = '', clienteSeleccionado = null, productosPedido = [];
+
+        function selectUser(user, pin) {
+            currentUser = user; expectedPin = pin;
+            document.getElementById('userSelection').style.display = 'none';
+            document.getElementById('pinSection').classList.add('active');
+        }
+
+        function backToUsers() {
+            currentUser = null; currentPin = '';
+            document.getElementById('userSelection').style.display = 'block';
+            document.getElementById('pinSection').classList.remove('active');
+            updatePinDisplay();
+        }
+
+        function enterPin(num) {
+            if (currentPin.length < 4) { currentPin += num; updatePinDisplay(); }
+        }
+
+        function clearPin() { currentPin = currentPin.slice(0, -1); updatePinDisplay(); }
+
+        function updatePinDisplay() {
+            for (let i = 1; i <= 4; i++) {
+                document.getElementById('dot' + i).classList.toggle('filled', i <= currentPin.length);
+            }
+        }
+
+        function checkPin() {
+            if (currentPin === expectedPin) {
+                showToast('¡Bienvenido ' + currentUser + '! 🍺', 'success');
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('appScreen').classList.add('active');
+            } else {
+                showToast('PIN incorrecto ❌', 'error');
+                currentPin = ''; updatePinDisplay();
+            }
+        }
+
+        function logout() {
+            currentUser = null; currentPin = ''; expectedPin = ''; clienteSeleccionado = null; productosPedido = [];
+            document.getElementById('loginScreen').style.display = 'block';
+            document.getElementById('appScreen').classList.remove('active');
+            document.getElementById('nuevoPedido').classList.remove('active');
+            document.getElementById('inventario').classList.remove('active');
+            document.getElementById('clientes').classList.remove('active');
+            backToUsers();
+        }
+
+        function showScreen(screen) {
+            document.querySelectorAll('.app-screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(screen).classList.add('active');
+            if (screen === 'nuevoPedido') initNuevoPedido();
+            if (screen === 'inventario') renderInventario('todos');
+            if (screen === 'clientes') renderClientes();
+        }
+
+        function initNuevoPedido() {
+            clienteSeleccionado = null; productosPedido = [];
+            document.getElementById('paso1').classList.remove('hidden');
+            document.getElementById('paso2').classList.add('hidden');
+            document.getElementById('clienteInfo').classList.add('hidden');
+            document.getElementById('btnContinuar').disabled = true;
+            document.getElementById('productosSeleccionados').innerHTML = '';
+            
+            const select = document.getElementById('selectCliente');
+            select.innerHTML = '<option value="">-- Selecciona cliente --</option>';
+            CLIENTES.sort((a, b) => a.nombre.localeCompare(b.nombre)).forEach(c => {
+                select.innerHTML += `<option value="${c.id}">${c.nombre} - ${(c.descuento * 100).toFixed(0)}% dto</option>`;
+            });
+            renderProductos(); updateTotales();
+        }
+
+        function selectCliente(id) {
+            if (!id) { document.getElementById('clienteInfo').classList.add('hidden'); document.getElementById('btnContinuar').disabled = true; return; }
+            clienteSeleccionado = CLIENTES.find(c => c.id == id);
+            document.getElementById('clienteInfo').classList.remove('hidden');
+            document.getElementById('clienteDescuento').textContent = (clienteSeleccionado.descuento * 100).toFixed(0) + '%';
+            document.getElementById('clienteTelefono').textContent = clienteSeleccionado.telefono;
+            document.getElementById('clienteCredito').textContent = clienteSeleccionado.credito > 0 ? clienteSeleccionado.credito + ' días' : 'Contado';
+            document.getElementById('btnContinuar').disabled = false;
+        }
+
+        function goToPaso2() {
+            document.getElementById('paso1').classList.add('hidden');
+            document.getElementById('paso2').classList.remove('hidden');
+            updateTotales();
+        }
+
+        function renderProductos() {
+            const container = document.getElementById('listaProductos');
+            container.innerHTML = '';
+            PRODUCTOS.forEach(p => {
+                const stockClass = p.stock <= 10 ? 'stock-bajo' : 'stock-ok';
+                const stockText = p.stock <= 10 ? '⚠️ Stock bajo' : '✓ Disponible';
+                container.innerHTML += `
+                    <div class="producto-item clickable" onclick="addProducto(${p.id})">
+                        <div>
+                            <div class="producto-nombre">${p.nombre}</div>
+                            <div class="producto-tipo">${p.tipo} • ${p.presentacion}</div>
+                            <div class="${stockClass}">${stockText} (${p.stock} uds)</div>
+                        </div>
+                        <div class="producto-precio">$${p.precio}</div>
+                    </div>`;
+            });
+        }
+
+        function addProducto(id) {
+            const producto = PRODUCTOS.find(p => p.id == id);
+            if (producto.stock <= 0) { showToast('Producto sin stock', 'error'); return; }
+            const existing = productosPedido.find(p => p.id == id);
+            if (existing) {
+                if (existing.cantidad >= producto.stock) { showToast('No hay más stock', 'error'); return; }
+                existing.cantidad++;
+            } else { productosPedido.push({ ...producto, cantidad: 1 }); }
+            renderProductosSeleccionados(); updateTotales(); showToast(`${producto.nombre} agregado ✓`, 'success');
+        }
+
+        function updateCantidad(index, delta) {
+            const item = productosPedido[index];
+            const producto = PRODUCTOS.find(p => p.id == item.id);
+            const nuevaCantidad = item.cantidad + delta;
+            if (nuevaCantidad <= 0) { productosPedido.splice(index, 1); }
+            else if (nuevaCantidad > producto.stock) { showToast('No hay más stock', 'error'); return; }
+            else { item.cantidad = nuevaCantidad; }
+            renderProductosSeleccionados(); updateTotales();
+        }
+
+        function removeProducto(index) {
+            productosPedido.splice(index, 1);
+            if (productosPedido.length === 0) { document.getElementById('productosSeleccionados').innerHTML = ''; }
+            else { renderProductosSeleccionados(); }
+            updateTotales();
+        }
+
+        function renderProductosSeleccionados() {
+            if (productosPedido.length === 0) return;
+            const container = document.getElementById('productosSeleccionados');
+            container.innerHTML = '';
+            productosPedido.forEach((p, i) => {
+                const subtotal = p.cantidad * p.precio;
+                container.innerHTML += `
+                    <div class="producto-item">
+                        <div>
+                            <div class="producto-nombre">${p.nombre}</div>
+                            <div class="producto-tipo">${p.presentacion}</div>
+                            <div class="cantidad-control" style="margin-top: 8px;">
+                                <button class="btn-cantidad" onclick="updateCantidad(${i}, -1)">-</button>
+                                <span class="cantidad-valor">${p.cantidad}</span>
+                                <button class="btn-cantidad mas" onclick="updateCantidad(${i}, 1)">+</button>
+                            </div>
+                        </div>
+                        <div style="text-align: right;">
+                            <div class="producto-precio">$${subtotal}</div>
+                            <div style="color: #888; font-size: 0.8rem;">${p.cantidad} x $${p.precio}</div>
+                            <button class="btn-eliminar" onclick="removeProducto(${i})" style="margin-top: 8px;"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>`;
+            });
+        }
+
+        function updateTotales() {
+            const subtotal = productosPedido.reduce((sum, p) => sum + (p.cantidad * p.precio), 0);
+            const descuento = clienteSeleccionado ? subtotal * clienteSeleccionado.descuento : 0;
+            const total = subtotal - descuento;
+            document.getElementById('subtotal').textContent = '$' + subtotal.toFixed(2);
+            document.getElementById('descuentoValor').textContent = '-$' + descuento.toFixed(2);
+            document.getElementById('totalFinal').textContent = '$' + total.toFixed(2);
+        }
+
+        function guardarPedido() {
+            if (!clienteSeleccionado || productosPedido.length === 0) { showToast('Completa el pedido', 'error'); return; }
+            showToast('✅ Pedido guardado', 'success');
+            setTimeout(() => { showScreen('appScreen'); }, 1500);
+        }
+
+        function shareWhatsApp() {
+            if (!clienteSeleccionado || productosPedido.length === 0) { showToast('Completa el pedido', 'error'); return; }
+            const subtotal = productosPedido.reduce((sum, p) => sum + (p.cantidad * p.precio), 0);
+            const descuento = clienteSeleccionado ? subtotal * clienteSeleccionado.descuento : 0;
+            const total = subtotal - descuento;
+            let mensaje = `🍺 *PEDIDO RASPUTIN*\n\n👤 Cliente: ${clienteSeleccionado.nombre}\n📅 ${new Date().toLocaleDateString('es-MX')}\n\n📦 *PRODUCTOS:*\n`;
+            productosPedido.forEach(p => { mensaje += `• ${p.nombre} (${p.presentacion})\n  ${p.cantidad} x $${p.precio} = $${(p.cantidad * p.precio).toFixed(2)}\n`; });
+            mensaje += `\n💰 *RESUMEN:*\nSubtotal: $${subtotal.toFixed(2)}\n`;
+            if (descuento > 0) mensaje += `Descuento: -$${descuento.toFixed(2)}\n`;
+            mensaje += `*TOTAL: $${total.toFixed(2)}*\n\n¡Gracias! 🍻`;
+            window.open(`https://wa.me/52${clienteSeleccionado.telefono}?text=${encodeURIComponent(mensaje)}`, '_blank');
+        }
+
+        function renderInventario(filtro) {
+            document.querySelectorAll('.tabs .tab').forEach(t => t.classList.remove('active'));
+            if (event) event.target.classList.add('active');
+            const container = document.getElementById('listaInventario');
+            container.innerHTML = '';
+            let productosFiltrados = PRODUCTOS;
+            if (filtro === 'bajo') productosFiltrados = PRODUCTOS.filter(p => p.stock <= 20);
+            else if (filtro === 'ncbc') productosFiltrados = PRODUCTOS.filter(p => p.cerveceria === 'NCBC');
+            else if (filtro === 'knee') productosFiltrados = PRODUCTOS.filter(p => p.cerveceria === 'KNEE DEEP');
+            productosFiltrados.forEach(p => {
+                const stockClass = p.stock <= 10 ? 'stock-bajo' : 'stock-ok';
+                container.innerHTML += `
+                    <div class="producto-item">
+                        <div>
+                            <div class="producto-nombre">${p.nombre}</div>
+                            <div class="producto-tipo">${p.tipo} • ${p.presentacion}</div>
+                            <div class="${stockClass}">Stock: ${p.stock} uds</div>
+                        </div>
+                        <div style="text-align: right;">
+                            <div class="producto-precio">$${p.precio}</div>
+                            <div style="color: #888; font-size: 0.75rem;">${p.cerveceria}</div>
+                        </div>
+                    </div>`;
+            });
+        }
+
+        function renderClientes() { filtrarClientes(''); }
+
+        function filtrarClientes(busqueda) {
+            const container = document.getElementById('listaClientes');
+            container.innerHTML = '';
+            const clientesFiltrados = CLIENTES.filter(c => c.nombre.toLowerCase().includes(busqueda.toLowerCase())).sort((a, b) => a.nombre.localeCompare(b.nombre));
+            clientesFiltrados.forEach(c => {
+                container.innerHTML += `
+                    <div class="producto-item">
+                        <div>
+                            <div class="producto-nombre">${c.nombre}</div>
+                            <div class="producto-tipo">${c.tipo} • 📞 ${c.telefono}</div>
+                        </div>
+                        <div style="text-align: right;">
+                            <div class="producto-precio">${(c.descuento * 100).toFixed(0)}%</div>
+                            <div style="color: #888; font-size: 0.75rem;">${c.credito > 0 ? c.credito + ' días crédito' : 'Contado'}</div>
+                        </div>
+                    </div>`;
+            });
+        }
+
+        function showToast(message, type) {
+            const existing = document.querySelector('.toast');
+            if (existing) existing.remove();
+            const toast = document.createElement('div');
+            toast.className = 'toast ' + type;
+            toast.innerHTML = message;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+    </script>
+</body>
+</html>

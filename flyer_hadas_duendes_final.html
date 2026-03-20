@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hadas y Duendes - Cascadas Encantadas</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: #0a1f15;
+            padding: 20px;
+        }
+        
+        .flyer {
+            width: 800px;
+            height: 1100px;
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px;
+            box-shadow: 0 25px 80px rgba(0,0,0,0.8);
+        }
+        
+        /* FONDO PRINCIPAL - Degradado bosque esmeralda a teal */
+        .background {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, 
+                #1a3a2f 0%, 
+                #1e4535 15%,
+                #235240 30%,
+                #2a6350 45%,
+                #357a68 60%,
+                #419080 75%,
+                #5abaaa 100%);
+        }
+        
+        /* CAPA DE NEBLINA */
+        .mist {
+            position: absolute;
+            inset: 0;
+            background: 
+                radial-gradient(ellipse 80% 30% at 50% 100%, rgba(255,255,255,0.15) 0%, transparent 60%),
+                radial-gradient(ellipse 60% 40% at 30% 70%, rgba(200,255,220,0.1) 0%, transparent 50%),
+                radial-gradient(ellipse 70% 35% at 70% 60%, rgba(180,255,200,0.08) 0%, transparent 55%);
+            filter: blur(20px);
+            animation: mistMove 8s ease-in-out infinite;
+        }
+        
+        @keyframes mistMove {
+            0%, 100% { opacity: 0.8; transform: translateY(0); }
+            50% { opacity: 1; transform: translateY(-10px); }
+        }
+        
+        /* ORBES DORADOS ETÉREOS */
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(1px);
+        }
+        
+        .orb-1 {
+            width: 280px;
+            height: 280px;
+            background: radial-gradient(circle at 30% 30%, 
+                rgba(255,220,150,0.9) 0%, 
+                rgba(255,200,100,0.6) 20%,
+                rgba(212,175,55,0.3) 40%,
+                transparent 70%);
+            top: -40px;
+            right: -20px;
+            animation: orbFloat1 7s ease-in-out infinite;
+        }
+        
+        .orb-2 {
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle at 40% 40%, 
+                rgba(255,240,180,0.7) 0%, 
+                rgba(255,215,100,0.4) 25%,
+                rgba(212,175,55,0.2) 45%,
+                transparent 65%);
+            top: 25%;
+            left: -30px;
+            animation: orbFloat2 9s ease-in-out infinite;
+        }
+        
+        .orb-3 {
+            width: 180px;
+            height: 180px;
+            background: radial-gradient(circle at 35% 35%, 
+                rgba(255,230,160,0.8) 0%, 
+                rgba(255,200,120,0.5) 20%,
+                rgba(212,175,55,0.25) 40%,
+                transparent 60%);
+            bottom: 35%;
+            right: 5%;
+            animation: orbFloat3 8s ease-in-out infinite;
+        }
+        
+        .orb-4 {
+            width: 150px;
+            height: 150px;
+            background: radial-gradient(circle at 30% 30%, 
+                rgba(255,220,140,0.6) 0%, 
+                rgba(255,190,90,0.35) 25%,
+                transparent 55%);
+            bottom: 15%;
+            left: 10%;
+            animation: orbFloat1 10s ease-in-out infinite reverse;
+        }
+        
+        .orb-5 {
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle at 40% 40%, 
+                rgba(255,235,170,0.5) 0%, 
+                rgba(255,210,130,0.25) 30%,
+                transparent 50%);
+            top: 45%;
+            left: 40%;
+            animation: orbFloat2 6s ease-in-out infinite;
+        }
+        
+        @keyframes orbFloat1 {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(15px, -20px) scale(1.05); }
+            66% { transform: translate(-10px, 10px) scale(0.98); }
+        }
+        
+        @keyframes orbFloat2 {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(-20px, -15px) scale(1.08); }
+        }
+        
+        @keyframes orbFloat3 {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            25% { transform: translate(10px, -25px) scale(1.03); }
+            75% { transform: translate(-15px, 15px) scale(0.97); }
+        }
+        
+        /* PARTÍCULAS TIPO LUCIÉRNAGAS */
+        .firefly {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(255,250,200,1);
+            border-radius: 50%;
+            box-shadow: 
+                0 0 6px rgba(255,250,200,0.9),
+                0 0 12px rgba(255,235,150,0.7),
+                0 0 20px rgba(255,220,100,0.5);
+            animation: fireflyMove 4s ease-in-out infinite;
+        }
+        
+        @keyframes fireflyMove {
+            0%, 100% { 
+                opacity: 0.2; 
+                transform: translate(0, 0) scale(0.5); 
+            }
+            25% { 
+                opacity: 1; 
+                transform: translate(20px, -30px) scale(1.2); 
+            }
+            50% { 
+                opacity: 0.6; 
+                transform: translate(-15px, -50px) scale(0.8); 
+            }
+            75% { 
+                opacity: 1; 
+                transform: translate(30px, -20px) scale(1); 
+            }
+        }
+        
+        /* DESTELLOS ESTRELLA */
+        .star {
+            position: absolute;
+            color: rgba(255,250,200,0.9);
+            font-size: 12px;
+            text-shadow: 0 0 10px rgba(255,250,200,1);
+            animation: starTwinkle 2s ease-in-out infinite;
+        }
+        
+        @keyframes starTwinkle {
+            0%, 100% { opacity: 0.3; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.3); }
+        }
+        
+        /* MARCO DORADO DECORATIVO */
+        .frame {
+            position: absolute;
+            inset: 25px;
+            border: 3px solid rgba(212,175,55,0.6);
+            border-radius: 12px;
+            box-shadow: 
+                inset 0 0 30px rgba(212,175,55,0.2),
+                0 0 30px rgba(212,175,55,0.15);
+        }
+        
+        .frame::before {
+            content: '';
+            position: absolute;
+            inset: 8px;
+            border: 1px solid rgba(212,175,55,0.3);
+            border-radius: 8px;
+        }
+        
+        /* ESQUINAS ORNAMENTALES */
+        .corner {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            border-color: rgba(212,175,55,0.7);
+            border-style: solid;
+            border-width: 0;
+        }
+        
+        .corner-tl {
+            top: 35px;
+            left: 35px;
+            border-top-width: 3px;
+            border-left-width: 3px;
+            border-radius: 15px 0 0 0;
+        }
+        
+        .corner-tr {
+            top: 35px;
+            right: 35px;
+            border-top-width: 3px;
+            border-right-width: 3px;
+            border-radius: 0 15px 0 0;
+        }
+        
+        .corner-bl {
+            bottom: 35px;
+            left: 35px;
+            border-bottom-width: 3px;
+            border-left-width: 3px;
+            border-radius: 0 0 0 15px;
+        }
+        
+        .corner-br {
+            bottom: 35px;
+            right: 35px;
+            border-bottom-width: 3px;
+            border-right-width: 3px;
+            border-radius: 0 0 15px 0;
+        }
+        
+        /* LÍNEAS DECORATIVAS DORADAS */
+        .divider {
+            position: absolute;
+            left: 12%;
+            right: 12%;
+            height: 2px;
+            background: linear-gradient(90deg, 
+                transparent 0%, 
+                rgba(212,175,55,0.2) 15%,
+                rgba(212,175,55,0.6) 50%,
+                rgba(212,175,55,0.2) 85%,
+                transparent 100%);
+        }
+        
+        .divider-1 { top: 200px; }
+        .divider-2 { top: 780px; }
+        
+        /* CONTENIDO PRINCIPAL */
+        .content {
+            position: relative;
+            z-index: 100;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 45px 55px;
+            text-align: center;
+        }
+        
+        /* Header */
+        .header {
+            margin-bottom: 12px;
+        }
+        
+        .brand {
+            font-family: 'Cinzel Decorative', cursive;
+            font-size: 17px;
+            color: rgba(220,255,230,0.95);
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+            text-shadow: 0 0 15px rgba(100,200,150,0.5);
+        }
+        
+        .brand-sub {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 13px;
+            color: rgba(212,175,55,0.85);
+            letter-spacing: 3px;
+            font-style: italic;
+        }
+        
+        /* Título principal */
+        .main-title {
+            font-family: 'Cinzel Decorative', cursive;
+            font-size: 54px;
+            font-weight: 900;
+            background: linear-gradient(180deg, 
+                #fff8dc 0%, 
+                #ffd700 20%, 
+                #ffec8b 40%,
+                #d4af37 60%,
+                #b8860b 80%,
+                #8b6914 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 50px rgba(255,215,0,0.6);
+            letter-spacing: 4px;
+            margin: 12px 0;
+            line-height: 1.1;
+            filter: drop-shadow(0 0 20px rgba(255,215,0,0.4));
+        }
+        
+        /* Subtítulo */
+        .subtitle {
+            font-family: 'Dancing Script', cursive;
+            font-size: 26px;
+            color: rgba(230,255,240,0.95);
+            margin-bottom: 22px;
+            text-shadow: 0 0 20px rgba(150,255,200,0.5);
+        }
+        
+        /* Invitación */
+        .invitation {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 20px;
+            color: rgba(255,255,255,0.97);
+            max-width: 580px;
+            line-height: 1.5;
+            margin-bottom: 22px;
+            font-style: italic;
+        }
+        
+        .invitation strong {
+            color: #ffd700;
+            font-weight: 600;
+            text-shadow: 0 0 10px rgba(255,215,0,0.4);
+        }
+        
+        /* Caja de pregunta */
+        .question-box {
+            background: linear-gradient(135deg, 
+                rgba(212,175,55,0.15) 0%, 
+                rgba(212,175,55,0.08) 100%);
+            border: 2px solid rgba(212,175,55,0.4);
+            border-radius: 15px;
+            padding: 14px 35px;
+            margin: 18px 0;
+            box-shadow: 
+                0 0 25px rgba(212,175,55,0.15),
+                inset 0 0 20px rgba(212,175,55,0.05);
+            backdrop-filter: blur(5px);
+        }
+        
+        .question {
+            font-family: 'Cinzel Decorative', cursive;
+            font-size: 22px;
+            color: #ffd700;
+            text-shadow: 0 0 15px rgba(255,215,0,0.5);
+        }
+        
+        .question-highlight {
+            font-family: 'Dancing Script', cursive;
+            font-size: 22px;
+            color: #a8e6cf;
+            margin-top: 8px;
+            text-shadow: 0 0 10px rgba(100,200,150,0.4);
+        }
+        
+        /* Actividades */
+        .activities {
+            margin: 22px 0;
+            max-width: 550px;
+        }
+        
+        .activity-item {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 18px;
+            color: rgba(255,255,255,0.95);
+            margin: 9px 0;
+            padding-left: 28px;
+            position: relative;
+            text-align: left;
+            line-height: 1.4;
+        }
+        
+        .activity-item::before {
+            content: "✦";
+            position: absolute;
+            left: 0;
+            color: #ffd700;
+            font-size: 15px;
+            text-shadow: 0 0 8px rgba(255,215,0,0.6);
+        }
+        
+        /* Detalles del evento */
+        .event-details {
+            margin-top: 18px;
+            width: 100%;
+        }
+        
+        .detail-box {
+            background: linear-gradient(135deg, 
+                rgba(0,40,30,0.5) 0%, 
+                rgba(0,60,45,0.4) 100%);
+            border: 1.5px solid rgba(100,200,130,0.35);
+            border-radius: 12px;
+            padding: 16px 28px;
+            margin: 10px 0;
+            backdrop-filter: blur(8px);
+        }
+        
+        .detail-label {
+            font-family: 'Cinzel Decorative', cursive;
+            font-size: 15px;
+            color: #7dd87d;
+            letter-spacing: 3px;
+            margin-bottom: 4px;
+        }
+        
+        .detail-value {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 24px;
+            color: #fff;
+            font-weight: 600;
+            text-shadow: 0 0 12px rgba(255,255,255,0.3);
+        }
+        
+        .location-highlight {
+            font-family: 'Cinzel Decorative', cursive;
+            font-size: 20px;
+            color: #ffd700;
+            margin-top: 4px;
+            letter-spacing: 2px;
+            text-shadow: 0 0 15px rgba(255,215,0,0.3);
+        }
+        
+        /* Campo vacío para horario */
+        .empty-field {
+            background: rgba(255,255,255,0.06);
+            border: 2px dashed rgba(212,175,55,0.35);
+            border-radius: 10px;
+            padding: 10px 28px;
+            margin: 8px 0;
+            display: inline-block;
+            min-width: 230px;
+        }
+        
+        .empty-label {
+            font-family: 'Cinzel Decorative', cursive;
+            font-size: 13px;
+            color: rgba(212,175,55,0.65);
+            letter-spacing: 2px;
+            display: block;
+            margin-bottom: 3px;
+        }
+        
+        .empty-value {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 18px;
+            color: rgba(255,255,255,0.45);
+            font-style: italic;
+        }
+        
+        /* Cupo limitado */
+        .limited-spots {
+            background: linear-gradient(90deg, 
+                rgba(255,100,100,0) 0%,
+                rgba(255,120,120,0.18) 20%,
+                rgba(255,120,120,0.28) 50%,
+                rgba(255,120,120,0.18) 80%,
+                rgba(255,100,100,0) 100%);
+            border-top: 1px solid rgba(255,130,130,0.35);
+            border-bottom: 1px solid rgba(255,130,130,0.35);
+            padding: 10px 35px;
+            margin: 18px 0;
+        }
+        
+        .limited-text {
+            font-family: 'Cinzel Decorative', cursive;
+            font-size: 18px;
+            color: #ff9999;
+            text-shadow: 0 0 15px rgba(255,130,130,0.5);
+            letter-spacing: 3px;
+        }
+        
+        /* Contacto WhatsApp */
+        .contact-section {
+            margin-top: auto;
+            padding-top: 12px;
+        }
+        
+        .contact-label {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 17px;
+            color: rgba(200,255,220,0.9);
+            font-style: italic;
+            margin-bottom: 8px;
+        }
+        
+        .whatsapp-box {
+            background: linear-gradient(135deg, 
+                rgba(37,211,102,0.18) 0%, 
+                rgba(37,211,102,0.08) 100%);
+            border: 2px solid rgba(37,211,102,0.45);
+            border-radius: 14px;
+            padding: 14px 45px;
+            display: inline-block;
+            box-shadow: 0 0 18px rgba(37,211,102,0.15);
+            backdrop-filter: blur(5px);
+        }
+        
+        .whatsapp-icon {
+            font-size: 26px;
+            margin-bottom: 4px;
+        }
+        
+        .whatsapp-text {
+            font-family: 'Cinzel Decorative', cursive;
+            font-size: 15px;
+            color: #25d366;
+            letter-spacing: 2px;
+        }
+        
+        .whatsapp-number {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 20px;
+            color: rgba(255,255,255,0.4);
+            margin-top: 4px;
+            font-style: italic;
+        }
+        
+        /* Footer */
+        .footer {
+            margin-top: 12px;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 13px;
+            color: rgba(200,255,220,0.75);
+            font-style: italic;
+        }
+        
+        /* Decoración de hojas */
+        .leaf-deco {
+            position: absolute;
+            font-size: 32px;
+            opacity: 0.45;
+            z-index: 50;
+            filter: drop-shadow(0 0 10px rgba(100,200,100,0.3));
+        }
+        
+        .leaf-1 { top: 90px; left: 45px; transform: rotate(-25deg); }
+        .leaf-2 { top: 90px; right: 45px; transform: rotate(25deg) scaleX(-1); }
+        .leaf-3 { bottom: 140px; left: 35px; transform: rotate(-155deg); }
+        .leaf-4 { bottom: 140px; right: 35px; transform: rotate(155deg) scaleX(-1); }
+        
+        /* Volutas decorativas doradas */
+        .swirl {
+            position: absolute;
+            color: rgba(212,175,55,0.25);
+            font-size: 60px;
+            z-index: 5;
+        }
+        
+        .swirl-1 { top: 180px; left: 60px; transform: rotate(-45deg); }
+        .swirl-2 { top: 180px; right: 60px; transform: rotate(45deg) scaleX(-1); }
+    </style>
+</head>
+<body>
+    <div class="flyer">
+        <!-- Fondo principal -->
+        <div class="background"></div>
+        
+        <!-- Efecto de neblina -->
+        <div class="mist"></div>
+        
+        <!-- Orbes dorados etéreos -->
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+        <div class="orb orb-4"></div>
+        <div class="orb orb-5"></div>
+        
+        <!-- Luciérnagas/partículas -->
+        <div class="firefly" style="top: 12%; left: 18%; animation-delay: 0s;"></div>
+        <div class="firefly" style="top: 22%; left: 78%; animation-delay: 0.7s;"></div>
+        <div class="firefly" style="top: 38%; left: 12%; animation-delay: 1.3s;"></div>
+        <div class="firefly" style="top: 48%; left: 88%; animation-delay: 0.4s;"></div>
+        <div class="firefly" style="top: 58%; left: 22%; animation-delay: 1.8s;"></div>
+        <div class="firefly" style="top: 68%; left: 82%; animation-delay: 0.9s;"></div>
+        <div class="firefly" style="top: 78%; left: 15%; animation-delay: 2.2s;"></div>
+        <div class="firefly" style="top: 85%; left: 75%; animation-delay: 1.1s;"></div>
+        <div class="firefly" style="top: 32%; left: 55%; animation-delay: 0.2s;"></div>
+        <div class="firefly" style="top: 72%; left: 45%; animation-delay: 2.5s;"></div>
+        
+        <!-- Destellos estrella -->
+        <div class="star" style="top: 15%; left: 25%; animation-delay: 0.3s;">✦</div>
+        <div class="star" style="top: 28%; left: 85%; animation-delay: 0.8s;">✦</div>
+        <div class="star" style="top: 45%; left: 8%; animation-delay: 1.5s;">✦</div>
+        <div class="star" style="top: 62%; left: 92%; animation-delay: 0.5s;">✦</div>
+        <div class="star" style="top: 75%; left: 30%; animation-delay: 1.8s;">✦</div>
+        <div class="star" style="top: 88%; left: 70%; animation-delay: 1.2s;">✦</div>
+        
+        <!-- Marco dorado -->
+        <div class="frame"></div>
+        <div class="corner corner-tl"></div>
+        <div class="corner corner-tr"></div>
+        <div class="corner corner-bl"></div>
+        <div class="corner corner-br"></div>
+        
+        <!-- Divisores -->
+        <div class="divider divider-1"></div>
+        <div class="divider divider-2"></div>
+        
+        <!-- Volutas decorativas -->
+        <div class="swirl swirl-1">❧</div>
+        <div class="swirl swirl-2">❧</div>
+        
+        <!-- Hojas decorativas -->
+        <div class="leaf-deco leaf-1">🌿</div>
+        <div class="leaf-deco leaf-2">🌿</div>
+        <div class="leaf-deco leaf-3">🍃</div>
+        <div class="leaf-deco leaf-4">🍃</div>
+        
+        <!-- CONTENIDO -->
+        <div class="content">
+            <!-- Header -->
+            <div class="header">
+                <div class="brand">✦ Bienestar en Cuerpo y Alma ✦</div>
+                <div class="brand-sub">Centro de Terapias Alternativas</div>
+            </div>
+            
+            <!-- Título -->
+            <h1 class="main-title">HADAS Y<br>DUENDES</h1>
+            
+            <!-- Subtítulo -->
+            <p class="subtitle">Un Encuentro Mágico con el Reino Elemental</p>
+            
+            <!-- Invitación -->
+            <p class="invitation">
+                Te invitamos a conectar con el mágico mundo de las <strong>HADAS</strong> y los <strong>DUENDES</strong>. 
+                Una experiencia de sanación exclusiva donde unificarás tu energía con estos seres místicos.
+            </p>
+            
+            <!-- Pregunta -->
+            <div class="question-box">
+                <p class="question">¿Te gusta el mágico mundo de las HADAS Y los DUENDES?</p>
+            </div>
+            <p class="question-highlight">¡Este evento es para ti!</p>
+            
+            <!-- Actividades -->
+            <div class="activities">
+                <div class="activity-item">Recibirás un par de <strong>símbolos sagrados</strong> para conectar con ellos</div>
+                <div class="activity-item"><strong>Sanación Energética</strong> al unificar tu energía con los seres elementales</div>
+                <div class="activity-item"><strong>Cantarás y Danzarás</strong> llena de gozo y contento</div>
+            </div>
+            
+            <!-- Fecha y Lugar -->
+            <div class="event-details">
+                <div class="detail-box">
+                    <div class="detail-label">📅 ¿CUÁNDO?</div>
+                    <div class="detail-value">Viernes 15 de Mayo 2026</div>
+                </div>
+                
+                <!-- Horario (vacío) -->
+                <div class="empty-field">
+                    <span class="empty-label">⏰ HORARIO</span>
+                    <span class="empty-value">Por confirmar</span>
+                </div>
+                
+                <div class="detail-box">
+                    <div class="detail-label">📍 ¿DÓNDE?</div>
+                    <div class="location-highlight">"CASCADAS ENCANTADAS"</div>
+                    <div style="font-family: 'Cormorant Garamond', serif; font-size: 17px; color: rgba(255,255,255,0.85); margin-top: 4px;">
+                        Villa del Carbón, Estado de México
+                    </div>
+                    <div style="font-family: 'Cormorant Garamond', serif; font-size: 14px; color: rgba(200,255,220,0.7); margin-top: 6px; font-style: italic;">
+                        Un asombroso lugar para tener contacto con la Naturaleza
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Cupo limitado -->
+            <div class="limited-spots">
+                <span class="limited-text">⚠️ CUPO LIMITADO ⚠️</span>
+            </div>
+            
+            <!-- Contacto -->
+            <div class="contact-section">
+                <div class="contact-label">Reserva tu lugar</div>
+                <div class="whatsapp-box">
+                    <div class="whatsapp-icon">💬</div>
+                    <div class="whatsapp-text">Escríbenos por WhatsApp</div>
+                    <div class="whatsapp-number">___________________</div>
+                </div>
+            </div>
+            
+            <!-- Footer -->
+            <div class="footer">
+                🌟 Un evento para conectar con la magia de la naturaleza 🌟
+            </div>
+        </div>
+    </div>
+</body>
+</html>

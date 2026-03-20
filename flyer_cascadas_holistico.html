@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flyer - Iniciación a las Cascadas</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: #1a1a2e;
+            padding: 20px;
+        }
+        
+        .flyer {
+            width: 800px;
+            height: 1100px;
+            background: linear-gradient(135deg, #1a3a2f 0%, #2d5a4a 25%, #3d7a5a 50%, #4a9a7a 75%, #5abaaa 100%);
+            position: relative;
+            overflow: hidden;
+            box-shadow: inset 0 0 200px rgba(0,0,0,0.5), 0 20px 60px rgba(0,0,0,0.5);
+            font-family: 'Cinzel', Georgia, serif;
+        }
+        
+        /* Efectos de luz mágica */
+        .light-orb {
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+        }
+        
+        .light-1 {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(255,215,100,0.3) 0%, transparent 70%);
+            top: -100px;
+            left: -100px;
+        }
+        
+        .light-2 {
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(100,255,200,0.25) 0%, transparent 70%);
+            bottom: 100px;
+            right: -50px;
+        }
+        
+        .light-3 {
+            width: 250px;
+            height: 250px;
+            background: radial-gradient(circle, rgba(200,150,255,0.2) 0%, transparent 70%);
+            top: 300px;
+            left: 50px;
+        }
+        
+        /* Partículas mágicas */
+        .particle {
+            position: absolute;
+            background: rgba(255,255,200,0.6);
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(255,255,200,0.8);
+            pointer-events: none;
+        }
+        
+        /* Marco decorativo */
+        .frame-outer {
+            position: absolute;
+            top: 30px;
+            left: 30px;
+            right: 30px;
+            bottom: 30px;
+            border: 3px solid rgba(212,175,55,0.6);
+            border-radius: 20px;
+            box-shadow: 0 0 30px rgba(212,175,55,0.3), inset 0 0 30px rgba(212,175,55,0.1);
+            pointer-events: none;
+        }
+        
+        .frame-inner {
+            position: absolute;
+            top: 40px;
+            left: 40px;
+            right: 40px;
+            bottom: 40px;
+            border: 1px solid rgba(212,175,55,0.3);
+            border-radius: 15px;
+            pointer-events: none;
+        }
+        
+        /* Elementos decorativos esquinas */
+        .corner {
+            position: absolute;
+            font-size: 40px;
+            opacity: 0.7;
+        }
+        
+        .corner-tl { top: 50px; left: 50px; transform: rotate(-45deg); }
+        .corner-tr { top: 50px; right: 50px; transform: rotate(45deg) scaleX(-1); }
+        .corner-bl { bottom: 50px; left: 50px; transform: rotate(-135deg); }
+        .corner-br { bottom: 50px; right: 50px; transform: rotate(135deg) scaleX(-1); }
+        
+        /* Línea decorativa */
+        .divider {
+            position: absolute;
+            top: 220px;
+            left: 100px;
+            right: 100px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(212,175,55,0.8), transparent);
+        }
+        
+        /* Título principal */
+        .title-section {
+            position: absolute;
+            top: 100px;
+            left: 0;
+            right: 0;
+            text-align: center;
+        }
+        
+        .main-title {
+            color: #f4e4c1;
+            font-size: 48px;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.7), 0 0 20px rgba(212,175,55,0.5);
+            letter-spacing: 3px;
+            font-weight: 700;
+        }
+        
+        .subtitle {
+            color: #a8e6cf;
+            font-size: 24px;
+            margin-top: 15px;
+            font-style: italic;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            font-family: 'Cormorant Garamond', serif;
+        }
+        
+        /* Fecha */
+        .date-section {
+            position: absolute;
+            top: 250px;
+            left: 0;
+            right: 0;
+            text-align: center;
+        }
+        
+        .date-label {
+            color: #d4af37;
+            font-size: 18px;
+            letter-spacing: 4px;
+        }
+        
+        .date-value {
+            color: #fff;
+            font-size: 42px;
+            margin-top: 10px;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+        
+        /* Horario */
+        .time-section {
+            position: absolute;
+            top: 380px;
+            left: 150px;
+            right: 150px;
+            background: rgba(0,0,0,0.25);
+            border-radius: 15px;
+            padding: 25px;
+            border: 2px dashed rgba(212,175,55,0.5);
+            text-align: center;
+        }
+        
+        .time-label {
+            color: #d4af37;
+            font-size: 20px;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+        
+        .time-value {
+            color: #fff;
+            font-size: 32px;
+            letter-spacing: 3px;
+            font-weight: bold;
+        }
+        
+        .time-placeholder {
+            color: rgba(255,255,255,0.4);
+            font-size: 28px;
+        }
+        
+        /* Descripción */
+        .desc-section {
+            position: absolute;
+            top: 540px;
+            left: 80px;
+            right: 80px;
+            text-align: center;
+        }
+        
+        .desc-title {
+            color: #d4af37;
+            font-size: 18px;
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+        }
+        
+        .desc-text {
+            color: #e8f5e9;
+            font-size: 20px;
+            line-height: 1.6;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+            font-style: italic;
+            font-family: 'Cormorant Garamond', serif;
+        }
+        
+        /* Decoración centro */
+        .decor-center {
+            position: absolute;
+            top: 700px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 30px;
+            opacity: 0.6;
+            letter-spacing: 20px;
+        }
+        
+        /* Cupo limitado */
+        .cupo-section {
+            position: absolute;
+            top: 760px;
+            left: 200px;
+            right: 200px;
+            background: rgba(212,175,55,0.2);
+            border: 2px solid rgba(212,175,55,0.6);
+            border-radius: 25px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 0 20px rgba(212,175,55,0.3);
+        }
+        
+        .cupo-text {
+            color: #ffd700;
+            font-size: 24px;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.7);
+        }
+        
+        .cupo-sub {
+            font-size: 16px;
+            color: #a8e6cf;
+            margin-top: 5px;
+        }
+        
+        /* Contacto */
+        .contact-section {
+            position: absolute;
+            top: 880px;
+            left: 0;
+            right: 0;
+            text-align: center;
+        }
+        
+        .contact-label {
+            color: #d4af37;
+            font-size: 18px;
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+        }
+        
+        .whatsapp-box {
+            display: inline-block;
+            background: rgba(37,211,102,0.15);
+            border: 2px solid #25d366;
+            border-radius: 15px;
+            padding: 20px 50px;
+        }
+        
+        .whatsapp-text {
+            color: #25d366;
+            font-size: 20px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+        
+        .whatsapp-number {
+            font-size: 28px;
+            font-weight: bold;
+            color: #fff;
+            margin-top: 8px;
+        }
+        
+        .whatsapp-placeholder {
+            color: rgba(255,255,255,0.4);
+            font-size: 24px;
+        }
+        
+        /* Footer */
+        .footer {
+            position: absolute;
+            bottom: 60px;
+            left: 0;
+            right: 0;
+            text-align: center;
+        }
+        
+        .footer-main {
+            color: #d4af37;
+            font-size: 16px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+            font-style: italic;
+        }
+        
+        .footer-sub {
+            font-size: 14px;
+            color: #a8e6cf;
+            margin-top: 8px;
+        }
+        
+        /* Instrucciones de impresión */
+        @media print {
+            body { background: white; }
+            .flyer { box-shadow: none; }
+        }
+        
+        /* Botón de guardar */
+        .save-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #25d366;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            font-family: 'Cinzel', serif;
+        }
+        
+        .instructions {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(0,0,0,0.8);
+            color: #fff;
+            padding: 15px;
+            border-radius: 10px;
+            max-width: 300px;
+            font-family: sans-serif;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="flyer" id="flyer">
+        <!-- Luces mágicas -->
+        <div class="light-orb light-1"></div>
+        <div class="light-orb light-2"></div>
+        <div class="light-orb light-3"></div>
+        
+        <!-- Partículas mágicas (generadas con JS) -->
+        
+        <!-- Marcos -->
+        <div class="frame-outer"></div>
+        <div class="frame-inner"></div>
+        
+        <!-- Esquinas decorativas -->
+        <div class="corner corner-tl">🌿</div>
+        <div class="corner corner-tr">🌿</div>
+        <div class="corner corner-bl">🌿</div>
+        <div class="corner corner-br">🌿</div>
+        
+        <!-- Línea divisoria -->
+        <div class="divider"></div>
+        
+        <!-- Título -->
+        <div class="title-section">
+            <h1 class="main-title">✨ INICIACIÓN A LAS CASCADAS ✨</h1>
+            <p class="subtitle">🌊 Un Viaje Místico al Reino del Agua 🌊</p>
+        </div>
+        
+        <!-- Fecha -->
+        <div class="date-section">
+            <p class="date-label">📅 FECHA MÁGICA</p>
+            <p class="date-value">15 DE MAYO 2026</p>
+        </div>
+        
+        <!-- Horario -->
+        <div class="time-section">
+            <p class="time-label">⏰ HORARIO DE SALIDA</p>
+            <p class="time-value"><span class="time-placeholder">__________</span></p>
+        </div>
+        
+        <!-- Descripción -->
+        <div class="desc-section">
+            <p class="desc-title">🦋 ¿QUÉ EXPERIENCIAREMOS?</p>
+            <p class="desc-text">
+                Un viaje místico a cascadas sagradas donde el velo entre mundos se adelgaza...<br><br>
+                Conectaremos con la energía del agua, los elementales del bosque y la magia ancestral que habita en estos lugares de poder.
+            </p>
+        </div>
+        
+        <!-- Decoración -->
+        <div class="decor-center">💧 🌸 💧</div>
+        
+        <!-- Cupo limitado -->
+        <div class="cupo-section">
+            <p class="cupo-text">⚠️ CUPO LIMITADO ⚠️</p>
+            <p class="cupo-sub">Reserva tu lugar a tiempo</p>
+        </div>
+        
+        <!-- Contacto -->
+        <div class="contact-section">
+            <p class="contact-label">✨ RESERVA TU LUGAR ✨</p>
+            <div class="whatsapp-box">
+                <p class="whatsapp-text">💬 Escríbenos por WhatsApp:</p>
+                <p class="whatsapp-number"><span class="whatsapp-placeholder">________________</span></p>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <div class="footer">
+            <p class="footer-main">🌿 Un encuentro con la magia de la naturaleza 🌿</p>
+            <p class="footer-sub">Trae ropa cómoda, agua, y una mente abierta a lo místico</p>
+        </div>
+    </div>
+    
+    <!-- Instrucciones -->
+    <div class="instructions">
+        <strong>📌 Instrucciones:</strong><br><br>
+        1. Escribe el horario en el espacio punteado<br>
+        2. Agrega tu número de WhatsApp<br>
+        3. Para guardar como imagen:<br>
+           &nbsp;&nbsp;• Windows: Presiona Win+Shift+S<br>
+           &nbsp;&nbsp;• Mac: Cmd+Shift+4<br>
+        4. O usa "Imprimir" y guarda como PDF
+    </div>
+    
+    <script>
+        // Generar partículas mágicas
+        const flyer = document.getElementById('flyer');
+        for(let i=0; i<30; i++) {
+            const dot = document.createElement('div');
+            dot.className = 'particle';
+            const size = Math.random() * 4 + 2;
+            dot.style.width = size + 'px';
+            dot.style.height = size + 'px';
+            dot.style.top = Math.random() * 1000 + 'px';
+            dot.style.left = Math.random() * 800 + 'px';
+            flyer.appendChild(dot);
+        }
+    </script>
+</body>
+</html>

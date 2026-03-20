@@ -1,0 +1,14 @@
+ZONA,TIPO_BARES,TIPO_TIENDAS,TIPO_RESTAURANTES,TIPO_DISTRIBUIDORES,TOTAL_LUGARES,PRIORIDAD
+Roma Norte,12,3,4,2,21,ALTA
+Condesa,6,2,3,1,12,ALTA
+Narvarte/Narvarte Poniente,4,2,0,2,8,ALTA
+Del Valle/Del Valle Norte,3,0,2,1,6,ALTA
+Centro Histórico,2,1,1,1,5,MEDIA
+Polanco,1,0,4,1,6,ALTA
+San Ángel/Juárez,2,1,2,1,6,MEDIA
+Portales/Taxqueña,1,0,0,0,1,MEDIA
+Tepito,0,1,0,0,1,MEDIA
+Sta María la Ribera,0,1,0,0,1,MEDIA
+Coyoacán,1,0,1,0,2,MEDIA
+Álvaro Obregón (General),2,0,1,1,4,MEDIA
+Todo CDMX (Distribución),0,0,0,25,25,ALTA
